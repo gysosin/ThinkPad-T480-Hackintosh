@@ -567,6 +567,13 @@ write_contents() {
             "$C_YELLOW" "$C_RESET" "$EFI_SRC" "$ESP_MNT"
     else
         sudo rsync -a --info=progress2 "$EFI_SRC/" "$ESP_MNT/EFI/"
+        # Also copy post-install.sh so the user can run it after install
+        local post_install="$REPO_ROOT/post-install.sh"
+        if [[ -f "$post_install" ]]; then
+            sudo cp "$post_install" "$ESP_MNT/post-install.sh"
+            sudo chmod +x "$ESP_MNT/post-install.sh"
+            info "Copied post-install.sh to ESP root"
+        fi
         sync
     fi
 
