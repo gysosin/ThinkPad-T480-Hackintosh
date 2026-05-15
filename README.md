@@ -83,6 +83,71 @@ Lilu 1.7.2 · VirtualSMC 1.3.7 · WhateverGreen 1.7.0 · AppleALC 1.9.7 · NVMeF
 
 &nbsp;
 
+## ⚠️ Critical post-install steps for Tahoe 26 on this T480
+
+The EFI alone gets you to the installer and a working desktop. Tahoe dropped support for our SMBIOS class (MacBookPro15,2 isn't on Apple's Tahoe supported list) and **removed AppleHDA entirely**, so two community-maintained patches are required after first boot:
+
+### 1. Audio (AppleHDA gone in Tahoe)
+Apple removed `AppleHDA.kext` from macOS 26 beta 2 onward. `AppleALC` is a Lilu plugin that patches AppleHDA — without the host kext you'll have NO audio. Fix:
+
+**Option A (recommended):** Install [OCLP-Mod 3.0+ (laobamac fork)](https://github.com/laobamac/OCLP-Mod) or [OCLP-Plus (YBronst)](https://github.com/YBronst/OCLP-Plus). Open the app → enable AppleHDA root-patch → reboot. Re-apply after every macOS update.
+
+**Option B (fallback):** Use [VoodooHDA-Tahoe (chris1111)](https://github.com/chris1111/VoodooHDA-Tahoe) installed to `/Library/Extensions`. Lower quality, no headphone auto-switching.
+
+The EFI's `OCLP-Settings = -allow_fv -allow_amfi` NVRAM entry is already set for OCLP-Mod to function.
+
+### 2. WiFi (Intel 8265 on Tahoe IOSkywalk stack)
+The EFI blocks `IOSkywalkFamily` and ships `AirportItlwm` with a BCM4360 spoof so OCLP can root-patch the WiFi stack. After first boot:
+
+```
+sudo "/Applications/OpenCore-Legacy-Patcher.app/Contents/MacOS/OpenCore-Legacy-Patcher" --patch-sys-vol --patch-kexts
+```
+
+(Or use [OCLP-Mod's GUI](https://github.com/laobamac/OCLP-Mod) → Post-Install Root Patch → check Wi-Fi.) After patches apply, the BCM4360 spoof in `DeviceProperties` can be commented out and the native WiFi menu bar should function. **Browsing works, but AirDrop/Handoff/Continuity won't** — Intel WiFi hardware limit.
+
+### 3. USB ports (Tahoe key rename)
+Tahoe expects new port-personality property keys in `USBMap.kext`. Without the rename, USB-3 ports may degrade to USB-2 speeds. After first boot, run:
+
+```
+git clone https://github.com/corpnewt/USBMap.git
+cd USBMap && python3 USBMapInjectorEdit.command
+```
+
+Drag the `USBMap.kext` from the mounted ESP → choose **"Update Keys for macOS 26 (Tahoe)"** → save. Then remount ESP and write the updated kext back.
+
+### 4. SMBIOS serial verification (manual — Apple blocks programmatic checks)
+Before first boot, open [checkcoverage.apple.com](https://checkcoverage.apple.com) in a browser and paste `C02ZLDZDJHCC`. Expected result: **"This serial number is not valid"**. If Apple recognizes it as a real Mac, regenerate via:
+
+```
+"Source Code/macserial" --model MacBookPro15,2 --generate --num 5
+```
+
+Pick the next unassigned one and update `PlatformInfo > Generic` in `config.plist`.
+
+### 5. BIOS settings to set (one-time, in T480 firmware setup)
+- Secure Boot → **Disabled**
+- Intel SGX / PTT / Computrace → **Disabled**
+- Fast Boot → **Disabled**
+- Always-On USB → **Disabled** (critical for Thunderbolt 3 hotplug + sleep stability)
+- Thunderbolt BIOS Assist Mode → **Disabled**
+- Wake on Thunderbolt → **Disabled**
+- TB Security Level → **User Authorization**
+- TB Pre-Boot Support → **Enabled**
+- VT-d → **Enabled** (the `DisableIoMapper` kernel quirk handles the macOS side)
+- VT-x → **Enabled** · Hyper-Threading → **Enabled**
+- CSM Support → **Disabled** · UEFI/Legacy → **UEFI Only**
+- Sleep State → **Linux** (= S3, NOT "Windows 10" which is S0ix and breaks macOS sleep)
+- Display → Total Graphics Memory → **512MB**
+
+### 6. Post-install boot-arg cleanup
+Once you've successfully booted 2-3 times, strip the verbose/debug flags from `boot-args`:
+
+Remove: `-v keepsyms=1 debug=0x100` (keep the rest)
+
+This gives a clean boot screen and cuts boot logging overhead.
+
+&nbsp;
+
 ## One-shot install USB builder: `create-install-usb.sh`
 
 Run on Linux to build the install USB end-to-end with no manual file copying:

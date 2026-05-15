@@ -338,7 +338,7 @@
 			<key>ClearTaskSwitchBit</key>
 			<false/>
 			<key>DevirtualiseMmio</key>
-			<false/>
+			<true/>
 			<key>DisableSingleUser</key>
 			<false/>
 			<key>DisableVariableWrite</key>
@@ -522,18 +522,31 @@
 				<key>device_type</key>
 				<string>Network Controller</string>
 				<key>model</key>
-				<string>BCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network AdapterBCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network Adapter
-BCM4360 802.11ac Wireless Network Adapter</string>
+				<string>Intel 8265 (spoof BCM4360 for OCLP)</string>
 				<key>name</key>
 				<string>pci14e4,43a0</string>
 				<key>pci-aspm-default</key>
-				<integer>0</integer>
+				<data>
+				AAAAAA==
+				</data>
+				<key>compatible</key>
+				<string>pci106b,117</string>
+				<key>device-id</key>
+				<data>
+				oEMAAA==
+				</data>
+				<key>vendor-id</key>
+				<data>
+				5BQAAA==
+				</data>
+				<key>subsystem-id</key>
+				<data>
+				FwEAAA==
+				</data>
+				<key>subsystem-vendor-id</key>
+				<data>
+				axAAAA==
+				</data>
 			</dict>
 		</dict>
 		<key>Delete</key>
@@ -821,7 +834,7 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 				<key>Comment</key>
 				<string>V1.3.5</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/VoodooRMI</string>
 				<key>MaxKernel</key>
@@ -893,7 +906,7 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 				<key>Comment</key>
 				<string>V3.0</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/VoodooSMBus</string>
 				<key>MaxKernel</key>
@@ -1198,7 +1211,7 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 				<key>Arch</key>
 				<string>x86_64</string>
 				<key>Comment</key>
-				<string>Allow IOSkywalk Downgrade</string>
+				<string>Block IOSkywalkFamily so AirportItlwm loads on Sonoma+/Tahoe</string>
 				<key>Enabled</key>
 				<true/>
 				<key>Identifier</key>
@@ -1206,7 +1219,7 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 				<key>MaxKernel</key>
 				<string></string>
 				<key>MinKernel</key>
-				<string>23.0.0</string>
+				<string>24.0.0</string>
 				<key>Strategy</key>
 				<string>Exclude</string>
 			</dict>
@@ -1456,10 +1469,12 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 			<key>4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102</key>
 			<dict>
 				<key>revpatch</key>
-				<string>sbvmm</string>
+				<string>sbvmm,asset</string>
 				<key>rtc-blacklist</key>
 				<data>
 				</data>
+				<key>OCLP-Settings</key>
+				<string>-allow_fv -allow_amfi</string>
 			</dict>
 			<key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
 			<dict>
@@ -1478,10 +1493,10 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 				AAAAAAAAAAAAAAAAAAA=
 				</data>
 				<key>boot-args</key>
-				<string>rtcfx_exclude=80-AB igfxonln=1 igfxpps=1 -igfxmpc shikigva=80 alcid=86 keepsyms=1 debug=0x100 -v -liluuserbeta -lilubetaall</string>
+				<string>rtcfx_exclude=80-AB igfxonln=1 igfxpps=1 -igfxmpc shikigva=80 alcid=86 keepsyms=1 debug=0x100 -v -liluuserbeta -lilubetaall amfi=0x80 ipc_control_port_options=0 -disable_sidecar_mac -igfxblr</string>
 				<key>csr-active-config</key>
 				<data>
-				ZwgAAA==
+				AwgAAA==
 				</data>
 				<key>prev-lang:kbd</key>
 				<string>en-US:0</string>
@@ -1499,6 +1514,8 @@ BCM4360 802.11ac Wireless Network Adapter</string>
 			<array>
 				<string>rtc-blacklist</string>
 				<string>revpatch</string>
+				<string>revblock</string>
+				<string>OCLP-Settings</string>
 			</array>
 			<key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
 			<array>
