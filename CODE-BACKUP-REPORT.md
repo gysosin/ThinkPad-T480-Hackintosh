@@ -1,106 +1,81 @@
 # Code backup report — 2026-05-15
 
-- Pushed: 30
-- Failed: 3
-- Skipped: 27
+- **Pushed: 31** private repos under github.com/gysosin
+- Skipped: 27 (TOAI/TOSS/Azure two8ai + external forks, per instruction)
+- Not backed up (no code): langflow (empty venv), otel_demo (nested public OSS clone; your real backup gysosin/otel_demo exists from 2025-11)
 
-## Manifest
+## Restore on macOS
 
-| Folder | Repo slug | Branch | Timestamp |
-|---|---|---|---|
-| `adk` | `adk` | `master` | 2026-05-15T07:43Z |
-| `agency-agents` | `skipped-by-policy` | `-` | 2026-05-15T07:43Z |
-| `Agentic_rag_flow` | `Agentic_rag_flow` | `main` | 2026-05-15T07:43Z |
-| `Agentic_studio` | `Agentic_studio` | `main` | 2026-05-15T07:43Z |
-| `ai-dashboard` | `ai-dashboard` | `main` | 2026-05-15T07:43Z |
-| `Ai_Monitoring` | `Ai_Monitoring` | `main` | 2026-05-15T07:43Z |
-| `ai-rag-dashboard` | `ai-rag-dashboard` | `FAILED` | 2026-05-15T07:44Z |
-| `assesment_toss` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `attndence-taoi` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `attndence-taoi-main` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `Booklet-Scanner` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `browser_automation` | `browser_automation` | `main` | 2026-05-15T07:44Z |
-| `builds-apk` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `chat_app` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `Chitthi` | `Chitthi` | `main` | 2026-05-15T07:44Z |
-| `cron` | `skipped-by-policy` | `-` | 2026-05-15T07:44Z |
-| `documet_hunking` | `documet_hunking` | `main` | 2026-05-15T07:44Z |
-| `geralt_ai` | `geralt_ai` | `main` | 2026-05-15T07:44Z |
-| `github_dashboard` | `github_dashboard` | `main` | 2026-05-15T07:44Z |
-| `iers` | `iers` | `main` | 2026-05-15T07:44Z |
-| `image_gen` | `image_gen` | `main` | 2026-05-15T07:44Z |
-| `Infra` | `Infra` | `main` | 2026-05-15T07:44Z |
-| `k8` | `k8` | `main` | 2026-05-15T07:45Z |
-| `langflow` | `langflow` | `FAILED` | 2026-05-15T07:45Z |
-| `Lenovo-ThinkPad-T480` | `skipped-by-policy` | `-` | 2026-05-15T07:45Z |
-| `meet` | `meet` | `main` | 2026-05-15T07:45Z |
-| `mock_apis` | `mock_apis` | `main` | 2026-05-15T07:45Z |
-| `NDCG` | `NDCG` | `master` | 2026-05-15T07:45Z |
-| `ndcg-azure` | `skipped-by-policy` | `-` | 2026-05-15T07:45Z |
-| `new_chat` | `new_chat` | `main` | 2026-05-15T07:45Z |
-| `NexusVault` | `NexusVault` | `feature/dashboard-onboarding-checklist` | 2026-05-15T07:46Z |
-| `NexusVault-roadmap` | `NexusVault-roadmap` | `docs/200-feature-roadmap` | 2026-05-15T07:46Z |
-| `ocr-enine` | `ocr-enine` | `main` | 2026-05-15T07:46Z |
-| `ocr_gemini` | `ocr_gemini` | `main` | 2026-05-15T07:46Z |
-| `ocr_min` | `ocr_min` | `main` | 2026-05-15T07:46Z |
-| `openrouter` | `openrouter` | `open_router_implementation` | 2026-05-15T07:46Z |
-| `otel_demo` | `otel_demo` | `FAILED` | 2026-05-15T07:46Z |
-| `otel_demo\` | `skipped-by-policy` | `-` | 2026-05-15T07:46Z |
-| `phonepe-vendor-management` | `phonepe-vendor-management` | `main` | 2026-05-15T07:46Z |
-| `porfolio` | `porfolio` | `main` | 2026-05-15T07:46Z |
-| `portainer` | `skipped-by-policy` | `-` | 2026-05-15T07:46Z |
-| `portfolio` | `portfolio` | `main` | 2026-05-15T07:46Z |
-| `portfolio_backup` | `skipped-by-policy` | `-` | 2026-05-15T07:46Z |
-| `ragflow` | `skipped-by-policy` | `-` | 2026-05-15T07:46Z |
-| `r&d` | `r-and-d` | `main` | 2026-05-15T07:47Z |
-| `SysSentient` | `SysSentient` | `feature/ai-insight-restricted-action-counter` | 2026-05-15T07:47Z |
-| `toai-dashboard-poc` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `toai---enhanced-ai-workspace` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `toai-final` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `toai_mail` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `toai-new` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `toai-next` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `toai_shadcn` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `Toss` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `TOSS` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `Toss AI` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `Toss-ai-azure` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `Toss-AI-iter2` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `Toss-AI-night` | `skipped-by-policy` | `-` | 2026-05-15T07:47Z |
-| `videgen` | `videgen` | `main` | 2026-05-15T07:47Z |
+```bash
+brew install gh git
+gh auth login
+bash restore-code.sh   # clones all 32 repos into ~/code/
+```
 
-## Per-folder reports
+## Pushed repos
 
-- [`adk`](.backup-reports/adk.md)
-- [`Agentic_rag_flow`](.backup-reports/Agentic_rag_flow.md)
-- [`Agentic_studio`](.backup-reports/Agentic_studio.md)
-- [`ai-dashboard`](.backup-reports/ai-dashboard.md)
-- [`Ai_Monitoring`](.backup-reports/Ai_Monitoring.md)
-- [`ai-rag-dashboard`](.backup-reports/ai-rag-dashboard.md)
-- [`browser_automation`](.backup-reports/browser_automation.md)
-- [`Chitthi`](.backup-reports/Chitthi.md)
-- [`documet_hunking`](.backup-reports/documet_hunking.md)
-- [`geralt_ai`](.backup-reports/geralt_ai.md)
-- [`github_dashboard`](.backup-reports/github_dashboard.md)
-- [`iers`](.backup-reports/iers.md)
-- [`image_gen`](.backup-reports/image_gen.md)
-- [`Infra`](.backup-reports/Infra.md)
-- [`k8`](.backup-reports/k8.md)
-- [`langflow`](.backup-reports/langflow.md)
-- [`meet`](.backup-reports/meet.md)
-- [`mock_apis`](.backup-reports/mock_apis.md)
-- [`NDCG`](.backup-reports/NDCG.md)
-- [`new_chat`](.backup-reports/new_chat.md)
-- [`NexusVault`](.backup-reports/NexusVault.md)
-- [`NexusVault-roadmap`](.backup-reports/NexusVault-roadmap.md)
-- [`ocr-enine`](.backup-reports/ocr-enine.md)
-- [`ocr_gemini`](.backup-reports/ocr_gemini.md)
-- [`ocr_min`](.backup-reports/ocr_min.md)
-- [`openrouter`](.backup-reports/openrouter.md)
-- [`otel_demo`](.backup-reports/otel_demo.md)
-- [`phonepe-vendor-management`](.backup-reports/phonepe-vendor-management.md)
-- [`porfolio`](.backup-reports/porfolio.md)
-- [`portfolio`](.backup-reports/portfolio.md)
-- [`r-and-d`](.backup-reports/r-and-d.md)
-- [`SysSentient`](.backup-reports/SysSentient.md)
-- [`videgen`](.backup-reports/videgen.md)
+| Folder | gysosin repo |
+|---|---|
+| `adk` | [`adk`](https://github.com/gysosin/adk) |
+| `Agentic_rag_flow` | [`Agentic_rag_flow`](https://github.com/gysosin/Agentic_rag_flow) |
+| `Agentic_studio` | [`Agentic_studio`](https://github.com/gysosin/Agentic_studio) |
+| `ai-dashboard` | [`ai-dashboard`](https://github.com/gysosin/ai-dashboard) |
+| `Ai_Monitoring` | [`Ai_Monitoring`](https://github.com/gysosin/Ai_Monitoring) |
+| `ai-rag-dashboard` | [`ai-rag-dashboard`](https://github.com/gysosin/ai-rag-dashboard) |
+| `browser_automation` | [`browser_automation`](https://github.com/gysosin/browser_automation) |
+| `Chitthi` | [`Chitthi`](https://github.com/gysosin/Chitthi) |
+| `documet_hunking` | [`documet_hunking`](https://github.com/gysosin/documet_hunking) |
+| `geralt_ai` | [`geralt_ai`](https://github.com/gysosin/geralt_ai) |
+| `github_dashboard` | [`github_dashboard`](https://github.com/gysosin/github_dashboard) |
+| `iers` | [`iers`](https://github.com/gysosin/iers) |
+| `image_gen` | [`image_gen`](https://github.com/gysosin/image_gen) |
+| `Infra` | [`Infra`](https://github.com/gysosin/Infra) |
+| `k8` | [`k8`](https://github.com/gysosin/k8) |
+| `meet` | [`meet`](https://github.com/gysosin/meet) |
+| `mock_apis` | [`mock_apis`](https://github.com/gysosin/mock_apis) |
+| `NDCG` | [`NDCG`](https://github.com/gysosin/NDCG) |
+| `new_chat` | [`new_chat`](https://github.com/gysosin/new_chat) |
+| `NexusVault` | [`NexusVault`](https://github.com/gysosin/NexusVault) |
+| `NexusVault-roadmap` | [`NexusVault-roadmap`](https://github.com/gysosin/NexusVault-roadmap) |
+| `ocr-enine` | [`ocr-enine`](https://github.com/gysosin/ocr-enine) |
+| `ocr_gemini` | [`ocr_gemini`](https://github.com/gysosin/ocr_gemini) |
+| `ocr_min` | [`ocr_min`](https://github.com/gysosin/ocr_min) |
+| `openrouter` | [`openrouter`](https://github.com/gysosin/openrouter) |
+| `phonepe-vendor-management` | [`phonepe-vendor-management`](https://github.com/gysosin/phonepe-vendor-management) |
+| `porfolio` | [`porfolio`](https://github.com/gysosin/porfolio) |
+| `portfolio` | [`portfolio`](https://github.com/gysosin/portfolio) |
+| `r&d` | [`r-and-d`](https://github.com/gysosin/r-and-d) |
+| `SysSentient` | [`SysSentient`](https://github.com/gysosin/SysSentient) |
+| `videgen` | [`videgen`](https://github.com/gysosin/videgen) |
+
+## Skipped (work/Azure/external — backed up elsewhere)
+
+- `agency-agents`
+- `assesment_toss`
+- `attndence-taoi`
+- `attndence-taoi-main`
+- `Booklet-Scanner`
+- `builds-apk`
+- `chat_app`
+- `cron`
+- `Lenovo-ThinkPad-T480`
+- `ndcg-azure`
+- `otel_demo\`
+- `portainer`
+- `portfolio_backup`
+- `ragflow`
+- `toai-dashboard-poc`
+- `toai---enhanced-ai-workspace`
+- `toai-final`
+- `toai_mail`
+- `toai-new`
+- `toai-next`
+- `toai_shadcn`
+- `Toss`
+- `TOSS`
+- `Toss AI`
+- `Toss-ai-azure`
+- `Toss-AI-iter2`
+- `Toss-AI-night`
+
+Per-folder audit detail: `.backup-reports/<slug>.md`

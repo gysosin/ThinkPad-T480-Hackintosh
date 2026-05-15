@@ -1,32 +1,21 @@
 #!/usr/bin/env bash
-# Auto-clone all gysosin private repos to ~/code/ on macOS.
-# Run on macOS after fresh install:
-#   brew install gh git
-#   gh auth login
-#   bash restore-code.sh
+# Auto-clone all gysosin private code-backup repos to ~/code/ on macOS.
+#   brew install gh git && gh auth login && bash restore-code.sh
 set -euo pipefail
-DEST="${DEST:-$HOME/code}"
-GH_USER="gysosin"
+DEST="${DEST:-$HOME/code}"; GH_USER="gysosin"
 mkdir -p "$DEST"; cd "$DEST"
 G=$'\033[1;32m'; Y=$'\033[1;33m'; R=$'\033[1;31m'; X=$'\033[0m'
-ok()   { echo "${G}[ ok ]${X} $*"; }
-warn() { echo "${Y}[warn]${X} $*"; }
-fail() { echo "${R}[fail]${X} $*"; }
-clone_one() {
-    local folder="$1" slug="$2"
-    if [[ -d "$folder/.git" ]]; then
-        warn "$folder exists — pull"
-        (cd "$folder" && git pull --ff-only) || warn "pull failed: $folder"
-    else
-        if gh repo clone "$GH_USER/$slug" "$folder"; then ok "$folder"; else fail "$folder"; fi
-    fi
-}
+ok(){ echo "${G}[ ok ]${X} $*"; }; warn(){ echo "${Y}[warn]${X} $*"; }; fail(){ echo "${R}[fail]${X} $*"; }
+clone_one(){ local folder="$1" slug="$2"
+  if [[ -d "$folder/.git" ]]; then warn "$folder exists — pull"; (cd "$folder" && git pull --ff-only)||warn "pull failed: $folder"
+  else gh repo clone "$GH_USER/$slug" "$folder" && ok "$folder" || fail "$folder"; fi; }
 
 clone_one adk adk
 clone_one Agentic_rag_flow Agentic_rag_flow
 clone_one Agentic_studio Agentic_studio
 clone_one ai-dashboard ai-dashboard
 clone_one Ai_Monitoring Ai_Monitoring
+clone_one ai-rag-dashboard ai-rag-dashboard
 clone_one browser_automation browser_automation
 clone_one Chitthi Chitthi
 clone_one documet_hunking documet_hunking
@@ -53,7 +42,10 @@ clone_one r\&d r-and-d
 clone_one SysSentient SysSentient
 clone_one videgen videgen
 
-ok "All repos restored to $DEST"
+ok "All backup repos restored to $DEST"
 echo
-echo "TOAI / Toss / Azure-DevOps repos are NOT in this list — clone manually:"
-echo "  git clone https://two8ai@dev.azure.com/two8ai/Toss%20AI/_git/<repo> ~/code/<folder>"
+echo "NOT in this list (clone manually if needed):"
+echo " - TOAI/Toss/Azure two8ai repos: git clone https://two8ai@dev.azure.com/two8ai/Toss%20AI/_git/<repo>"
+echo " - toai-final: git clone https://github.com/IT-TOSS/toai-final.git"
+echo " - langflow: was only a leftover venv (no code)"
+echo " - otel_demo: nested clone of public open-telemetry/opentelemetry-demo"
