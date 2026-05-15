@@ -161,6 +161,61 @@ Most builds don't hit this — `usb-port-number` keys are already in our USBMap 
 
 &nbsp;
 
+### 7. CRITICAL: skip FileVault during Setup Assistant
+
+Tahoe auto-enables FileVault for Apple-Account users. On a hackintosh without a real T2 chip, the APFS decryption path is **broken** — your next boot will be locked out with no recovery.
+
+**On the first-boot Setup Assistant:**
+- Choose **"Set Up for Myself"** then **"Don't sign in"** (skip Apple Account for now).
+- Create a **local user account** with password.
+- If FileVault is offered, choose **"Set up later in System Settings"** — never accept it during Setup.
+
+You can sign into your Apple Account *after* boot from System Settings → Apple Account; just don't let Setup Assistant turn on FileVault.
+
+&nbsp;
+
+### 8. Post-install: sleep stability + Liquid Glass perf
+
+Tahoe re-enables S4 hibernation each major update — kernel-panics on hackintosh. After first successful boot, run in Terminal:
+
+```bash
+sudo pmset -a hibernatemode 0 standby 0 autopoweroff 0 powernap 0 ttyskeepawake 0 networkoversleep 0
+sudo rm -f /var/vm/sleepimage
+```
+
+UHD 620 is underpowered for Tahoe's Liquid Glass UI — these defaults dramatically reduce WindowServer CPU/GPU load:
+
+```bash
+defaults write -g com.apple.SwiftUI.DisableSolarium -bool YES     # kills Liquid Glass shader entirely
+defaults write -g NSAutoFillHeuristicControllerEnabled -bool false # fix typing-lag bug
+defaults write -g NSAutomaticInlinePredictionEnabled -bool false   # fix cursor-stall bug
+```
+
+Then in System Settings:
+- **Accessibility → Display → Reduce Transparency** = ON
+- **Accessibility → Display → Reduce Motion** = ON
+- **Spotlight → Search Results** → **uncheck** "Show Related Content" and "Help Apple Improve Search" (fixes `corespotlightd` 100% CPU + `mds_stores` runaway RAM)
+
+Logout / login for the `defaults` changes to take effect.
+
+&nbsp;
+
+### 9. After every macOS update — re-apply
+
+Tahoe minor updates (26.x → 26.y) wipe several things you'll need to re-apply:
+
+1. **AppleHDA root patch** (audio dies otherwise) — open OCLP-Mod → Post-Install Root Patch → re-run.
+2. **`pmset` hibernation block** — Tahoe upgrade resets `hibernatemode` to 3.
+3. **Lilu / WhateverGreen / AppleALC / VirtualSMC** — update kexts in EFI **before** running the macOS update, not after. Otherwise the new kernel may not match.
+
+&nbsp;
+
+### 10. Heads-up: 49-day TCP overflow kernel bug (Apple, not fixed in 26.5)
+
+XNU has a `uint32_t` millisecond counter that overflows at 49d 17h 2m 47s of uptime. When it does, ALL new TCP connections fail (ping still works). Apple hasn't patched it. T480 typically sleeps daily so you'll never see this, but if you keep the laptop running for ~6+ weeks straight, reboot before hitting the wall.
+
+&nbsp;
+
 ## Troubleshooting (if you hit specific symptoms)
 
 These are *contingent* fixes — only apply if you actually see the symptom.
