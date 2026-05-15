@@ -537,7 +537,9 @@ partition_usb() {
     run_destructive parted -s "$dev" mklabel gpt
     run_destructive parted -s "$dev" mkpart ESP fat32 1MiB 301MiB
     run_destructive parted -s "$dev" set 1 esp on
-    run_destructive parted -s "$dev" mkpart "macOS Install" hfs+ 301MiB 100%
+    # Partition name must be single token — parted's -s mode tokenizer
+    # splits on whitespace inside argv even with bash double-quoting.
+    run_destructive parted -s "$dev" mkpart TahoeInstall hfs+ 301MiB 100%
 
     if (( ! DRY_RUN )); then
         run_priv partprobe "$dev"
