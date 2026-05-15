@@ -597,12 +597,14 @@ write_contents() {
         printf '%s[DRY ]%s rsync -a "%s/" "%s/EFI/"\n' \
             "$C_YELLOW" "$C_RESET" "$EFI_SRC" "$ESP_MNT"
     else
-        sudo rsync -a --info=progress2 "$EFI_SRC/" "$ESP_MNT/EFI/"
+        # FAT32 has no Unix ownership/permissions, so rsync -a's preserve-owner/
+        # group/perms flags trigger "Operation not permitted" on every entry
+        # (data still copies fine but rsync exits 23). Use -rltD instead.
+        sudo rsync -rltD --info=stats2 "$EFI_SRC/" "$ESP_MNT/EFI/"
         # Also copy post-install.sh so the user can run it after install
         local post_install="$REPO_ROOT/post-install.sh"
         if [[ -f "$post_install" ]]; then
             sudo cp "$post_install" "$ESP_MNT/post-install.sh"
-            sudo chmod +x "$ESP_MNT/post-install.sh"
             info "Copied post-install.sh to ESP root"
         fi
         sync
