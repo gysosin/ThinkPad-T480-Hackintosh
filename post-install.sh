@@ -44,6 +44,18 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
+if [[ $EUID -eq 0 ]]; then
+  fail "Do NOT run this script with sudo or as root."
+  fail "If you do, all 'defaults write' lines write to root's preferences"
+  fail "instead of your GUI user — the perf/UI tweaks silently no-op."
+  fail ""
+  fail "Re-run as your normal user. The script will ask for your password"
+  fail "once and then sudo individual commands itself:"
+  fail ""
+  fail "  bash $0"
+  exit 1
+fi
+
 MACOS_MAJOR=$(sw_vers -productVersion | cut -d. -f1)
 if [[ "$MACOS_MAJOR" -lt 26 ]]; then
   warn "Detected macOS $(sw_vers -productVersion). This script targets Tahoe (26+). Some fixes may not apply."
@@ -178,7 +190,15 @@ INSTRUCTIONS
 
 # Try to launch it
 if [[ -d "$OCLP_APP_DIR" ]]; then
-  open -a "OCLP-Mod"  && ok "Launched OCLP-Mod"
+  # Pre-clear Gatekeeper quarantine on the freshly-installed app so it opens
+  # without the user having to right-click → Open in Finder.
+  sudo xattr -dr com.apple.quarantine "$OCLP_APP_DIR" 2>/dev/null || true
+  if open -a "$OCLP_APP_DIR" 2>/dev/null; then
+    ok "Launched OCLP-Mod"
+  else
+    warn "Gatekeeper may have blocked OCLP-Mod. Open Finder → Applications,"
+    warn "right-click OCLP-Mod → Open to bypass the unidentified-developer dialog."
+  fi
 fi
 
 # ------------------------------------------------------------

@@ -469,8 +469,18 @@ download_recovery() {
         )
     else
         info "Using macrecovery.py at $macrec"
+        # Acidanthera's macrecovery.py calls os.get_terminal_size() which throws
+        # ENOTTY when stdout is piped (we tee to a logfile). Patch it idempotently
+        # to use shutil.get_terminal_size which has a (80, 24) fallback.
+        if grep -q 'os.get_terminal_size().columns' "$macrec"; then
+            sed -i "s|os.get_terminal_size().columns|__import__('shutil').get_terminal_size(fallback=(80, 24)).columns|g" "$macrec"
+            info "Patched macrecovery.py for non-TTY stdout"
+        fi
+        # macrecovery default --outdir is "com.apple.recovery.boot" RELATIVE to CWD.
+        # cd to GIBMACOS_DIR (parent), so files land in $GIBMACOS_DIR/com.apple.recovery.boot/
+        # which is what $download_dir points at.
         (
-            cd "$download_dir"
+            cd "$GIBMACOS_DIR"
             python3 "$macrec" \
                 -b "$RECOVERY_BOARD_ID" \
                 -m "$RECOVERY_MLB" \
@@ -531,7 +541,6 @@ partition_usb() {
 
     if (( ! DRY_RUN )); then
         run_priv partprobe "$dev"
-        sleep 2
         udevadm settle 2>/dev/null || true
     fi
 
@@ -539,8 +548,24 @@ partition_usb() {
     esp_part="$(part_path "$dev" 1)"
     rec_part="$(part_path "$dev" 2)"
 
+    # Poll for partition device nodes to appear (replaces fixed sleep 2)
+    if (( ! DRY_RUN )); then
+        local i
+        for i in $(seq 1 20); do
+            [[ -b "$esp_part" && -b "$rec_part" ]] && break
+            sleep 0.5
+        done
+        [[ -b "$esp_part" ]] || error "ESP partition $esp_part never appeared"
+        [[ -b "$rec_part" ]] || error "Recovery partition $rec_part never appeared"
+    fi
+
+    # Set GPT partition type GUIDs: ESP (EF00) + Apple HFS+ (AF00)
+    run_destructive sgdisk -t "1:EF00" -t "2:AF00" "$dev"
+
     run_destructive mkfs.fat -F 32 -n "OPENCORE" "$esp_part"
-    run_destructive mkfs.hfsplus -v "macOS Install" "$rec_part"
+    # Recovery partition is overwritten by `dd` later — no need to format,
+    # but doing so means partprobe/blkid have something coherent to read.
+    run_destructive mkfs.hfsplus -v "Install" "$rec_part"
 
     ok "Partitioned: $esp_part (ESP FAT32), $rec_part (HFS+)"
 }
