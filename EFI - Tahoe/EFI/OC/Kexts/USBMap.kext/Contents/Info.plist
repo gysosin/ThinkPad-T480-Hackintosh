@@ -54,12 +54,20 @@
 						<data>
 						AQAAAA==
 						</data>
+						<key>usb-port-number</key>
+						<data>
+						AQAAAA==
+						</data>
 					</dict>
 					<key>SS01</key>
 					<dict>
 						<key>UsbConnector</key>
 						<integer>9</integer>
 						<key>port</key>
+						<data>
+						AwAAAA==
+						</data>
+						<key>usb-port-number</key>
 						<data>
 						AwAAAA==
 						</data>
@@ -103,12 +111,20 @@
 						<data>
 						AQAAAA==
 						</data>
+						<key>usb-port-number</key>
+						<data>
+						AQAAAA==
+						</data>
 					</dict>
 					<key>HS02</key>
 					<dict>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
+						<data>
+						AgAAAA==
+						</data>
+						<key>usb-port-number</key>
 						<data>
 						AgAAAA==
 						</data>
@@ -121,12 +137,20 @@
 						<data>
 						BAAAAA==
 						</data>
+						<key>usb-port-number</key>
+						<data>
+						BAAAAA==
+						</data>
 					</dict>
 					<key>HS04</key>
 					<dict>
 						<key>UsbConnector</key>
 						<integer>255</integer>
 						<key>port</key>
+						<data>
+						BwAAAA==
+						</data>
+						<key>usb-port-number</key>
 						<data>
 						BwAAAA==
 						</data>
@@ -139,12 +163,20 @@
 						<data>
 						CAAAAA==
 						</data>
+						<key>usb-port-number</key>
+						<data>
+						CAAAAA==
+						</data>
 					</dict>
 					<key>SS01</key>
 					<dict>
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
+						<data>
+						DQAAAA==
+						</data>
+						<key>usb-port-number</key>
 						<data>
 						DQAAAA==
 						</data>
@@ -157,6 +189,10 @@
 						<data>
 						DgAAAA==
 						</data>
+						<key>usb-port-number</key>
+						<data>
+						DgAAAA==
+						</data>
 					</dict>
 					<key>SS03</key>
 					<dict>
@@ -166,12 +202,20 @@
 						<data>
 						DwAAAA==
 						</data>
+						<key>usb-port-number</key>
+						<data>
+						DwAAAA==
+						</data>
 					</dict>
 					<key>SS04</key>
 					<dict>
 						<key>UsbConnector</key>
 						<integer>9</integer>
 						<key>port</key>
+						<data>
+						EAAAAA==
+						</data>
+						<key>usb-port-number</key>
 						<data>
 						EAAAAA==
 						</data>

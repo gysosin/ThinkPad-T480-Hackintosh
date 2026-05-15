@@ -148,6 +148,26 @@ This gives a clean boot screen and cuts boot logging overhead.
 
 &nbsp;
 
+## Troubleshooting (if you hit specific symptoms)
+
+These are *contingent* fixes — only apply if you actually see the symptom.
+
+| Symptom | Fix | Source |
+|---|---|---|
+| Audio dies after every macOS update (root patches reverted) | Switch from OCLP-Mod's AppleHDA root patch to [chris1111/VoodooHDA-Tahoe](https://github.com/chris1111/VoodooHDA-Tahoe) installed to `/Library/Extensions` — survives updates without re-patching. Lower quality but zero maintenance. | T490 #73, MML #49 |
+| Headphone jack distorted / weak after sleep wake | Apply [lolipuru's AppleALC WakeConfigData patch](https://github.com/lolipuru/Thinkpad-T480-Opencore/commit/4981a8d) to layout-86 codec in `AppleALC.kext/Contents/Info.plist` (EAPD + Pin Widget Control verbs added). | EETagent #10, valnoxy #160/162 |
+| CPU stuck at 600-800 MHz after 1+ sleep cycles (BD-PROCHOT throttle stuck) | Add [DisablePROCHOT.efi](https://github.com/arter97/DisablePROCHOT) to UEFI Drivers + [SimpleMSR.kext](https://github.com/lvs1974/SimpleMSR) to Kernel.Add. Re-enables PROCHOT clear after each S3 wake. | T490 #44 |
+| External HDMI displays with color banding / yellow tint | Try `AAPL,ig-platform-id = <0000C087>` (UHD 617 spoof) instead of `<00001659>` (UHD 620 native). Test, revert if it breaks internal. | EETagent #60/82, bugtracker #1159 |
+| External display only works after physical re-plug post-wake | MBP15,2 SMBIOS lacks HDMI port descriptor. Use USB-C→HDMI adapter, or experiment with MBP16,3 SMBIOS. | valnoxy #154 |
+| Thunderbolt 3 hot-plug or DP-alt-mode fails | Update Thunderbolt EEPROM (NVM23) from Windows: download `n24th13w.exe` from [Lenovo TB3 firmware](https://support.lenovo.com/us/en/downloads/ds502613). Stock NVM20 causes hotplug failures. | T490 #64, Lenovo |
+| Random Bluetooth dongle failed messages | Two NVRAM keys under `7C436110...`: `bluetoothExternalDongleFailed=00`, `bluetoothInternalControllerInfo`=11 null bytes. **Already in this EFI** — just noting cause if you see logs. | valnoxy #115/104 |
+| iMessage / FaceTime activation fails repeatedly | Intel WiFi hardware limit. Either disable SIP temporarily during activation, or hardware-swap to Broadcom DW1560 / BCM94352Z (M.2 2230, ~$15). | OpenIntelWireless #942 |
+| CMOS checksum bad / boot loop after long (>1h) sleep | Already mitigated by `rtcfx_exclude=80-AB` + RTCMemoryFixup + HibernationFixup. If still happens, add `Booter.ReservedMemory` dict for RTC region per [OpenCorePkg 76bf9bd](https://github.com/acidanthera/OpenCorePkg/commit/76bf9bd). | T490 #35, EETagent #20 |
+| Samsung 970 EVO Plus NVMe acting up post-wake | Disable NVMeFix in Kernel.Add. SM2263 in this build is fine with NVMeFix enabled. | bugtracker #1645 |
+| OpenCore picker doesn't show Windows dual-boot | Re-scan disks (`d` in picker), increase `Misc.Boot.Timeout`, ensure `OpenLinuxBoot.efi` placement is correct. | valnoxy #97 |
+
+&nbsp;
+
 ## One-shot install USB builder: `create-install-usb.sh`
 
 Run on Linux to build the install USB end-to-end with no manual file copying:

@@ -758,7 +758,7 @@
 				<key>MaxKernel</key>
 				<string></string>
 				<key>MinKernel</key>
-				<string></string>
+				<string>19.0.0</string>
 				<key>PlistPath</key>
 				<string>Contents/Info.plist</string>
 			</dict>
@@ -1519,7 +1519,7 @@
 				AAAAAAAAAAAAAAAAAAA=
 				</data>
 				<key>boot-args</key>
-				<string>rtcfx_exclude=80-AB igfxonln=1 igfxpps=1 -igfxmpc shikigva=80 alcid=86 keepsyms=1 debug=0x100 -v -liluuserbeta -lilubetaall amfi=0x80 ipc_control_port_options=0 -disable_sidecar_mac -igfxblr</string>
+				<string>rtcfx_exclude=80-AB igfxonln=1 igfxpps=1 -igfxmpc shikigva=80 alcid=86 keepsyms=1 debug=0x100 -v -liluuserbeta -lilubetaall amfi=0x80 ipc_control_port_options=0 -disable_sidecar_mac -igfxblr unfairgva=4</string>
 				<key>csr-active-config</key>
 				<data>
 				AwgAAA==
