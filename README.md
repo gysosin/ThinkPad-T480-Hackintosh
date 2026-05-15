@@ -148,6 +148,19 @@ This gives a clean boot screen and cuts boot logging overhead.
 
 &nbsp;
 
+### Optional: if first install attempt panics with USBMap loaded
+Tahoe's XHCI key schema changed; some users see a kernel panic referencing USB on first boot. If that happens:
+
+1. Reboot from the USB installer.
+2. At OpenCore picker, press **`O`** to enter Tools → OpenShell.
+3. Mount the EFI partition of the USB, edit `config.plist`, set `USBMap.kext`'s `Enabled = False`.
+4. Retry the install.
+5. After macOS is fully installed, re-enable USBMap and (recommended) run `corpnewt/USBMap`'s `USBMapInjectorEdit.command` → "Update Keys for macOS 26 (Tahoe)" to refresh port keys.
+
+Most builds don't hit this — `usb-port-number` keys are already in our USBMap and `USBToolBox.kext` 1.2.0 is loaded as the parent, which should cover it. The fallback above is for the edge case.
+
+&nbsp;
+
 ## Troubleshooting (if you hit specific symptoms)
 
 These are *contingent* fixes — only apply if you actually see the symptom.
