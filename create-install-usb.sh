@@ -550,8 +550,8 @@ partition_usb() {
 
     # Poll for partition device nodes to appear (replaces fixed sleep 2)
     if (( ! DRY_RUN )); then
-        local i
-        for i in $(seq 1 20); do
+        local _attempt
+        for _attempt in $(seq 1 20); do
             [[ -b "$esp_part" && -b "$rec_part" ]] && break
             sleep 0.5
         done
