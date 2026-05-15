@@ -324,11 +324,15 @@ list_candidates() {
     local sys_devs
     sys_devs="$(system_block_devs)"
 
-    # NAME SIZE MODEL TRAN RM
-    while read -r name size model tran rm; do
+    # NAME SIZE TRAN RM MODEL  (MODEL last so multi-word names land in $model)
+    while read -r name size tran rm model; do
         [[ -z "$name" ]] && continue
         # filter: removable OR usb transport
         if [[ "$rm" != "1" && "$tran" != "usb" ]]; then
+            continue
+        fi
+        # skip zero-size devices (empty card readers etc.)
+        if [[ "$size" == "0" ]]; then
             continue
         fi
         # exclude system disks
@@ -336,7 +340,7 @@ list_candidates() {
             continue
         fi
         printf '%s\t%s\t%s\n' "$name" "$size" "${model:-Unknown}"
-    done < <(lsblk -d -b -o NAME,SIZE,MODEL,TRAN,RM -n -e 1,7,11)
+    done < <(lsblk -d -b -o NAME,SIZE,TRAN,RM,MODEL -n -e 1,7,11)
 }
 
 humanize_size() {
