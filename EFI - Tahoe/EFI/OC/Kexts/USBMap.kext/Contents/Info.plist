@@ -27,7 +27,7 @@
 			<key>CFBundleIdentifier</key>
 			<string>com.apple.driver.AppleUSBHostMergeProperties</string>
 			<key>IOClass</key>
-			<string>AppleUSBHostMergeProperties</string>
+			<string>USBToolBox</string>
 			<key>IOParentMatch</key>
 			<dict>
 				<key>IOPropertyMatch</key>
@@ -68,13 +68,15 @@
 			</dict>
 			<key>model</key>
 			<string>MacBookPro15,2</string>
+			<key>IOMatchCategory</key>
+			<string>USBToolBox</string>
 		</dict>
 		<key>_SB.PCI0.XHC</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
 			<string>com.apple.driver.AppleUSBHostMergeProperties</string>
 			<key>IOClass</key>
-			<string>AppleUSBHostMergeProperties</string>
+			<string>USBToolBox</string>
 			<key>IOParentMatch</key>
 			<dict>
 				<key>IOPropertyMatch</key>
@@ -178,9 +180,16 @@
 			</dict>
 			<key>model</key>
 			<string>MacBookPro15,2</string>
+			<key>IOMatchCategory</key>
+			<string>USBToolBox</string>
 		</dict>
 	</dict>
 	<key>OSBundleRequired</key>
 	<string>Root</string>
+	<key>OSBundleLibraries</key>
+	<dict>
+		<key>com.dhinakg.USBToolBox.kext</key>
+		<string>1.0.0</string>
+	</dict>
 </dict>
 </plist>
