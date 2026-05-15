@@ -70,6 +70,14 @@
 				<key>Path</key>
 				<string>SSDT-YOGASMC.aml</string>
 			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>SSDT-XOSI provides XOSI method for _OSI rename</string>
+				<key>Enabled</key>
+				<true/>
+				<key>Path</key>
+				<string>SSDT-XOSI.aml</string>
+			</dict>
 		</array>
 		<key>Delete</key>
 		<array/>
@@ -1158,7 +1166,7 @@
 				<key>Comment</key>
 				<string>V9.2 | HoRNDIS.kext</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/HoRNDIS</string>
 				<key>MaxKernel</key>
@@ -1321,7 +1329,7 @@
 			<key>InstanceIdentifier</key>
 			<string></string>
 			<key>LauncherOption</key>
-			<string>Disabled</string>
+			<string>Short</string>
 			<key>LauncherPath</key>
 			<string>Default</string>
 			<key>PickerAttributes</key>
