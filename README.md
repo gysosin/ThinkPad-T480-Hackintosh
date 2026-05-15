@@ -7,8 +7,9 @@
 [![macOS](https://img.shields.io/badge/macOS-Monterey-hotpink.svg)](https://developer.apple.com/documentation/macos-release-notes)
 [![macOS](https://img.shields.io/badge/macOS-Ventura-orange.svg)](https://developer.apple.com/documentation/macos-release-notes)
 [![macOS](https://img.shields.io/badge/macOS-Sonoma-brightgreen.svg)](https://developer.apple.com/documentation/macos-release-notes)
-[![macOS](https://img.shields.io/badge/macOS-Sequoia-lightblue.svg)](https://www.apple.com/macos/macos-sequoia/) 
-[![OpenCore](https://img.shields.io/badge/OpenCore-1.0.4-blue)](https://github.com/acidanthera/OpenCorePkg)
+[![macOS](https://img.shields.io/badge/macOS-Sequoia-lightblue.svg)](https://www.apple.com/macos/macos-sequoia/)
+[![macOS](https://img.shields.io/badge/macOS-Tahoe_26-9b59b6.svg)](https://www.apple.com/macos/)
+[![OpenCore](https://img.shields.io/badge/OpenCore-1.0.7-blue)](https://github.com/acidanthera/OpenCorePkg)
 [![License](https://img.shields.io/badge/license-MIT-purple)](/LICENSE)
 
 <p align="center">
@@ -45,9 +46,64 @@ This repo includes multiple EFI configuations for different macOS Versions.
 | `EFI - HeliPort`  | Supports every macOS Version, Requires HeliPort app      			| `Stable`  |
 | `EFI - Broadcom`  | Supports every macOS Version (except Sonoma)		                | `Beta`    |
 | `EFI - Sonoma`    | Supports macOS Sonoma (using Itlwm and HeliPort)				| `Stable`  |
-| `EFI - Sequoia`   | Supports macOS Sequoia (using Airportitlwm)				| `Stable`  |         
+| `EFI - Sequoia`   | Supports macOS Sequoia (using Airportitlwm)				| `Stable`  |
+| `EFI - Tahoe`     | macOS Tahoe 26 — OpenCore 1.0.7, all kexts latest, personalised SMBIOS    | `Active`  |
 
 > **Note** The Broadcom configuration is not stable. Use ```EFI``` instead for a better experience (you can also disable Airportitlwm).
+
+&nbsp;
+
+## EFI - Tahoe (this fork's primary config)
+
+OpenCore **1.0.7** build targeting **macOS Tahoe 26.x** on this T480 hardware (i7-8650U, UHD 620, Intel 8265, SM2263 NVMe, ALC257, 32 GiB).
+
+**All kexts latest as of 2026-05-15:**
+Lilu 1.7.2 · VirtualSMC 1.3.7 · WhateverGreen 1.7.0 · AppleALC 1.9.7 · NVMeFix 1.1.3 · AirportItlwm 2.3.0 (Sonoma14.4 variant, Tahoe-compatible via OCLP root patches) · IntelBluetoothFirmware 2.4.0 · BlueToolFixup 2.7.2 · VoodooPS2 2.3.7 · VoodooRMI 1.4.3 · IntelMausi 1.0.8 · HibernationFixup 1.5.4 · RTCMemoryFixup 1.0.7 · BrightnessKeys 1.0.3 · YogaSMC 1.5.3 · ECEnabler 1.0.6 · RestrictEvents 1.1.6
+
+**Personalisations from upstream MultimediaLucario template:**
+- SMBIOS regenerated (MacBookPro15,2 — supports Tahoe natively via T2). Upstream example serial replaced.
+- ROM set to real I219-LM MAC of this T480 for cleanest iServices baseline.
+- `alcid=86` in boot-args matches HDEF DeviceProperties layout-id (T480 ALC257 community-verified).
+- `SSDT-OFFDGPU` and `SSDT-ARPT` disabled (no dGPU, not on Broadcom).
+- `AirportItlwm-Ventura.kext` → `AirportItlwm.kext`; `IntelMausiEthernet.kext` → `IntelMausi.kext` (latest upstream naming).
+- Boot-args tuned for KBL-R UHD 620 + Tahoe: `igfxonln=1 igfxpps=1 -igfxmpc shikigva=80 -liluuserbeta -lilubetaall`.
+- `PanicNoKextDump=False` for diagnostic-friendly install.
+- Verbose mode + debug flags ON for install — strip after first successful boot (`-v`, `debug=0x100`).
+- OpenCore 1.0.7 binaries + drivers (added `OpenVariableRuntimeDxe.efi` with `LoadEarly=True`).
+- Passes `ocvalidate` 1.0.7 with zero issues.
+
+**SMBIOS verification:** Apple's checkcoverage.apple.com blocks programmatic lookup. Before first boot, paste `C02ZLDZDJHCC` into [checkcoverage.apple.com](https://checkcoverage.apple.com) manually — must return "not a valid serial". If it matches a real Mac, regenerate via `Source Code/macserial`.
+
+**Known caveats (hardware/OS limits, not config bugs):**
+- Intel 8265 WiFi: no native Apple wireless → no AirDrop / Handoff / Continuity / Sidecar. Browsing works after OCLP root patches.
+- Safari can't play DRM video (Netflix / Apple TV+) — use Chrome/Firefox.
+- NVMe SM2263 DRAM-less: macOS doesn't support HMB → ~30-40% lower random IOPS (sequential I/O fine).
+- Fingerprint reader (Synaptics): no macOS driver.
+- Tahoe runs hotter than Sequoia on UHD 620; ~30 min less battery.
+
+&nbsp;
+
+## One-shot install USB builder: `create-install-usb.sh`
+
+Run on Linux to build the install USB end-to-end with no manual file copying:
+
+```bash
+./create-install-usb.sh                          # TUI: pick USB drive interactively
+./create-install-usb.sh --dry-run                # print what would happen, no destructive ops
+./create-install-usb.sh --device /dev/sdX --yes  # automation (CAREFUL)
+```
+
+The script:
+1. Installs missing deps (`whiptail`, `parted`, `dosfstools`, `hfsprogs`, `dmg2img`) via `dnf`/`apt`.
+2. Validates `EFI - Tahoe/EFI/` via `ocvalidate`.
+3. Whiptail TUI lists USB drives; hard-excludes your system disk.
+4. Triple confirmation before any write.
+5. Downloads macOS Tahoe recovery via `macrecovery.py` (~700 MB).
+6. Partitions GPT: 300 MiB ESP (FAT32) + remainder HFS+.
+7. `rsync`s `EFI - Tahoe/EFI/` to ESP; `dd`s `BaseSystem.dmg` to the recovery partition.
+8. Verifies the result.
+
+Logs to `/tmp/t480-usb-builder-<timestamp>.log`. Internal NVMe is never touched.
 
 <a href="https://github.com/OpenIntelWireless/HeliPort/releases"><strong>
 Download HeliPort app »</strong></a>
